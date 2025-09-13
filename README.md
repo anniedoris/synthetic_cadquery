@@ -13,3 +13,13 @@ python inference_pipelines/runVLM.py --model_path Qwen/Qwen2.5-VL-72B-Instruct -
 ```
 
 Note: this will overwrite currently existing ```object_descriptions.json``` file.
+
+## Running LLM Portion of the Pipeline
+
+To then pass the generated descriptions to an LLM to generate CadQuery code, use:
+
+```
+python inference_pipelines/runLLM.py --model_path Qwen/Qwen3-Coder-30B-A3B-Instruct --seed_json_script object_descriptions.json --save_path sdg.json
+```
+
+Note: to get Qwen3-Coder running with vllm, I had to use an older version (0.8.4) versus 0.9.1 which I usually use.

@@ -23,3 +23,18 @@ python inference_pipelines/runLLM.py --model_path Qwen/Qwen3-Coder-30B-A3B-Instr
 ```
 
 Note: to get Qwen3-Coder running with vllm, I had to use an older version (0.8.4) versus 0.9.1 which I usually use.
+
+## Generating Images from CadQuery Code
+
+To generate images of the CadQuery parts using the same rendering setup as was used for the ABC dataset, you cannot run the code on the H100s. You can run the code on a local linux machine. Before leaving the H100s, first convert the generated code into .py files:
+
+```
+python misc_scripts/generate_py_files.py --input_json sdg.json --output_dir generated_code
+```
+
+Then copy the ```generated_code``` directory to your local linux machine along with this repo. Generate the images using:
+
+```
+xvfb-run python generate_images.py --input_parts generated_code --output_images generated_code_images
+```
+

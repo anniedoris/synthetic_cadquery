@@ -1,0 +1,11 @@
+{
+  "seq_index": 5009,
+  "bucket": "medium",
+  "score": 10.5,
+  "n_entities": 5,
+  "n_constraints": 11,
+  "n_lines": 0,
+  "n_arcs": 0,
+  "n_circles": 5,
+  "n_tangent": 2
+}

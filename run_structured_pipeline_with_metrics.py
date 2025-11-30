@@ -117,7 +117,7 @@ def main():
     # STEP 1: VLM
     if not args.skip_vlm:
         cmd = [
-            'python', 'inference_pipelines/runVLM_structured.py',
+            'python3', 'inference_pipelines/runVLM_structured.py',
             '--model_path', args.vlm_model,
             '--seed_images', args.seed_images,
             '--save_path', vlm_output,
@@ -140,7 +140,7 @@ def main():
     # STEP 2: LLM
     if not args.skip_llm:
         cmd = [
-            'python', 'inference_pipelines/runLLM_from_structured.py',
+            'python3', 'inference_pipelines/runLLM_from_structured.py',
             '--model_path', args.llm_model,
             '--seed_json_script', vlm_output,
             '--save_path', llm_output,
@@ -163,7 +163,7 @@ def main():
     # STEP 3: Extract Python files
     if not args.skip_extract:
         cmd = [
-            'python', 'misc_scripts/generate_py_files.py',
+            'python3', 'misc_scripts/generate_py_files.py',
             '--input_json', llm_output,
             '--output_dir', code_dir
         ]
@@ -184,7 +184,7 @@ def main():
     # STEP 4: Generate images
     if not args.skip_images:
         cmd = [
-            'python', 'misc_scripts/generate_images.py',
+            'python3', 'misc_scripts/generate_images.py',
             '--input_parts', code_dir,
             '--output_images', images_dir
         ]

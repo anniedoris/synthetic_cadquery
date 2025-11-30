@@ -31,7 +31,7 @@ def run_command_with_timing(cmd, description):
     print(f"{'='*80}\n")
 
     start_time = time.time()
-    result = subprocess.run(cmd, capture_output=False, text=True)
+    result = subprocess.run(cmd)
     end_time = time.time()
 
     elapsed = end_time - start_time

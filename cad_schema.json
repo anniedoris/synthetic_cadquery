@@ -1,0 +1,197 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Structured CAD Representation",
+  "description": "JSON schema for representing CAD objects with operations, sketches, and constraints",
+  "type": "object",
+  "properties": {
+    "workplane": {
+      "type": "string",
+      "enum": ["XY", "YZ", "XZ", "front", "back", "left", "right", "top", "bottom"],
+      "description": "Initial workplane orientation"
+    },
+    "operations": {
+      "type": "array",
+      "description": "List of CAD operations to perform in sequence",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "sketch"
+              },
+              "shapes": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "shape": {"const": "rect"},
+                        "width": {"type": "number"},
+                        "height": {"type": "number"},
+                        "centered": {"type": "boolean", "default": true}
+                      },
+                      "required": ["shape", "width", "height"]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "shape": {"const": "circle"},
+                        "radius": {"type": "number"}
+                      },
+                      "required": ["shape", "radius"]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "shape": {"const": "polygon"},
+                        "nSides": {"type": "integer", "minimum": 3},
+                        "diameter": {"type": "number"}
+                      },
+                      "required": ["shape", "nSides", "diameter"]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "shape": {"const": "polyline"},
+                        "points": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {"type": "number"},
+                            "minItems": 2,
+                            "maxItems": 2
+                          }
+                        },
+                        "closed": {"type": "boolean", "default": false}
+                      },
+                      "required": ["shape", "points"]
+                    }
+                  ]
+                }
+              }
+            },
+            "required": ["type", "shapes"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "extrude"},
+              "distance": {"type": "number"},
+              "combine": {"type": "boolean", "default": true}
+            },
+            "required": ["type", "distance"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "cut"},
+              "distance": {"type": "number"}
+            },
+            "required": ["type", "distance"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "hole"},
+              "diameter": {"type": "number"},
+              "depth": {"type": "number"},
+              "positions": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {"type": "number"},
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              }
+            },
+            "required": ["type", "diameter"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "fillet"},
+              "radius": {"type": "number"},
+              "selector": {"type": "string", "default": "|Z or |X or |Y"}
+            },
+            "required": ["type", "radius"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "chamfer"},
+              "length": {"type": "number"},
+              "selector": {"type": "string"}
+            },
+            "required": ["type", "length"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "rotate"},
+              "axisStart": {
+                "type": "array",
+                "items": {"type": "number"},
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "axisEnd": {
+                "type": "array",
+                "items": {"type": "number"},
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "angle": {"type": "number"}
+            },
+            "required": ["type", "axisStart", "axisEnd", "angle"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "translate"},
+              "offset": {
+                "type": "array",
+                "items": {"type": "number"},
+                "minItems": 3,
+                "maxItems": 3
+              }
+            },
+            "required": ["type", "offset"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "mirror"},
+              "mirrorPlane": {"type": "string", "enum": ["XY", "YZ", "XZ"]},
+              "union": {"type": "boolean", "default": false}
+            },
+            "required": ["type", "mirrorPlane"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "shell"},
+              "thickness": {"type": "number"}
+            },
+            "required": ["type", "thickness"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {"const": "workplane_on_face"},
+              "face_selector": {"type": "string"}
+            },
+            "required": ["type", "face_selector"]
+          }
+        ]
+      }
+    },
+    "description": {
+      "type": "string",
+      "description": "High-level description of what the object is"
+    }
+  },
+  "required": ["workplane", "operations"]
+}
